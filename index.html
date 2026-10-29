@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>ตารางเลี้ยงลูก WFH</title>
+    <meta
+      name="description"
+      content="ตารางกิน นอน เล่น แจ้งเตือน และบันทึกของลูกหลายคน สำหรับพ่อ/แม่คุณแม่ทำงานที่บ้าน"
+    />
+    <meta name="theme-color" content="#ff9db8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍼%3C/text%3E%3C/svg%3E"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #f4faf9;
+        --card: #fff;
+        --ink: #1c2b29;
+        --mute: #6a7f7b;
+        --acc: #0fb5a0;
+        --accink: #04372f;
+        --line: #e2eeec;
+        --tint: #e8f8f5;
+        --warm: #fff0e9;
+        --sky: #d9efff;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #14201f;
+          --card: #1d2c2a;
+          --ink: #eaf5f3;
+          --mute: #9bb2ae;
+          --line: #2c3f3c;
+          --tint: #1f3a36;
+          --warm: #3b2a22;
+          --sky: #223a4d;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #14201f;
+        --card: #1d2c2a;
+        --ink: #eaf5f3;
+        --mute: #9bb2ae;
+        --line: #2c3f3c;
+        --tint: #1f3a36;
+        --warm: #3b2a22;
+        --sky: #223a4d;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Prompt", "Sarabun", system-ui, sans-serif;
+        line-height: 1.5;
+        max-width: 560px;
+        margin-inline: auto;
+        padding: 14px 14px 100px;
+      }
+      h1,
+      h2 {
+        margin: 0;
+        font-weight: 600;
+      }
+      h1 {
+        font-size: 1.3rem;
+      }
+      h2 {
+        font-size: 1.1rem;
+      }
+      small {
+        color: var(--mute);
+        font-size: 0.8rem;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .hr {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .clock {
+        font-size: 1.1rem;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+      .ib {
+        border: 0;
+        background: var(--card);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+        cursor: pointer;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 20px;
+        padding: 16px;
+        margin-top: 12px;
+        box-shadow: 0 1px 3px #0000000f;
+      }
+      .card.par {
+        background: var(--warm);
+      }
+      .lb {
+        font-size: 0.8rem;
+        color: var(--mute);
+        font-weight: 500;
+        margin-bottom: 6px;
+      }
+      .par ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .par li {
+        padding: 8px 0;
+      }
+      .par li + li {
+        border-top: 1px solid var(--line);
+      }
+      .par .tx {
+        font-weight: 500;
+        font-size: 1.02rem;
+      }
+      .kr {
+        display: flex;
+        gap: 12px;
+        padding: 10px 0;
+      }
+      .kr + .kr {
+        border-top: 1px solid var(--line);
+      }
+      .ic {
+        flex: none;
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: var(--tint);
+        display: grid;
+        place-items: center;
+        font-size: 1.7rem;
+      }
+      .kb {
+        flex: 1;
+        min-width: 0;
+      }
+      .kt {
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+        flex-wrap: wrap;
+      }
+      .kt b {
+        font-weight: 600;
+      }
+      .zz {
+        background: var(--sky);
+        border-radius: 999px;
+        padding: 0 10px;
+        font-size: 0.78rem;
+      }
+      .bar {
+        height: 6px;
+        border-radius: 6px;
+        background: var(--line);
+        margin: 8px 0 4px;
+        overflow: hidden;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        background: var(--acc);
+        border-radius: 6px;
+      }
+      details {
+        margin-top: 6px;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 500;
+        padding: 6px 0;
+      }
+      .list {
+        list-style: none;
+        margin: 4px 0 0;
+        padding: 0;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        padding: 7px 10px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+      }
+      .row.cur {
+        background: var(--tint);
+      }
+      .row.done {
+        opacity: 0.5;
+      }
+      .row .t {
+        flex: none;
+        width: 44px;
+        color: var(--mute);
+        font-variant-numeric: tabular-nums;
+      }
+      .tips ul {
+        margin: 6px 0 0;
+        padding-left: 18px;
+        font-size: 0.9rem;
+      }
+      .tips li {
+        margin-bottom: 6px;
+      }
+      .btn {
+        border: 0;
+        font: inherit;
+        font-weight: 600;
+        border-radius: 14px;
+        padding: 11px 16px;
+        cursor: pointer;
+        background: var(--acc);
+        color: var(--accink);
+      }
+      .btn.alt {
+        background: var(--tint);
+        color: var(--ink);
+      }
+      .btn.off {
+        background: var(--line);
+        color: var(--mute);
+      }
+      .chips {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 2px 0 8px;
+        scrollbar-width: none;
+      }
+      .chip {
+        flex: none;
+        border: 0;
+        background: var(--tint);
+        color: var(--ink);
+        font: inherit;
+        font-weight: 500;
+        padding: 7px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--acc);
+        color: var(--accink);
+      }
+      #fab {
+        position: fixed;
+        right: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 0;
+        background: var(--acc);
+        color: var(--accink);
+        font-size: 2rem;
+        line-height: 1;
+        box-shadow: 0 6px 18px #0003;
+        cursor: pointer;
+        z-index: 8;
+      }
+      .ov {
+        position: fixed;
+        inset: 0;
+        background: #0006;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 15;
+        padding: 16px;
+      }
+      .ov.sheet {
+        align-items: flex-end;
+        padding: 0;
+      }
+      .shc {
+        background: var(--card);
+        width: 100%;
+        max-width: 560px;
+        max-height: 92vh;
+        overflow-y: auto;
+        border-radius: 24px 24px 0 0;
+        padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+        animation: up 0.22s;
+      }
+      @keyframes up {
+        from {
+          transform: translateY(24px);
+          opacity: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .shc {
+          animation: none;
+        }
+      }
+      .shh {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .shh button {
+        border: 0;
+        background: var(--line);
+        color: var(--ink);
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .tp {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+      }
+      .tp button {
+        border: 2px solid transparent;
+        background: var(--tint);
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.72rem;
+        border-radius: 14px;
+        padding: 8px 2px;
+        cursor: pointer;
+      }
+      .tp button b {
+        display: block;
+        font-size: 1.4rem;
+        font-weight: 400;
+      }
+      .tp button[aria-pressed="true"] {
+        border-color: var(--acc);
+      }
+      .qk {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+      .qk button {
+        border: 0;
+        background: var(--line);
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.85rem;
+        border-radius: 999px;
+        padding: 5px 12px;
+        cursor: pointer;
+      }
+      .shc input,
+      .wc input {
+        font: inherit;
+        width: 100%;
+        margin-top: 8px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1.5px solid var(--line);
+        background: var(--bg);
+        color: var(--ink);
+      }
+      .shc .btn,
+      .wc .btn {
+        width: 100%;
+        margin-top: 8px;
+        display: block;
+      }
+      .sum {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 14px 0 8px;
+      }
+      .sum span {
+        background: var(--tint);
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-size: 0.82rem;
+      }
+      .ent {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 0.88rem;
+      }
+      .ent button {
+        margin-left: auto;
+        border: 0;
+        background: none;
+        color: var(--mute);
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      .wc {
+        background: var(--card);
+        border-radius: 24px;
+        padding: 22px 20px;
+        max-width: 380px;
+        width: 100%;
+        text-align: center;
+        max-height: 92vh;
+        overflow-y: auto;
+      }
+      .wb {
+        font-size: 2.2rem;
+      }
+      .wc p {
+        color: var(--mute);
+        margin: 6px 0 10px;
+        font-size: 0.9rem;
+      }
+      .err {
+        color: #d6456b;
+        font-size: 0.9rem;
+        min-height: 1.2em;
+        margin-top: 6px;
+      }
+      #toast {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        top: calc(12px + env(safe-area-inset-top, 0px));
+        max-width: 536px;
+        margin: auto;
+        background: var(--ink);
+        color: var(--bg);
+        border-radius: 16px;
+        padding: 12px 16px;
+        box-shadow: 0 8px 24px #0004;
+        display: none;
+        z-index: 30;
+        font-weight: 500;
+        white-space: pre-line;
+      }
+      #toast.show {
+        display: block;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--acc);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="toast" role="alert"></div>
+    <header>
+      <h1>ตารางวันนี้</h1>
+      <div class="hr">
+        <span class="clock" id="clk">--:--</span
+        ><button class="ib" id="setB" aria-label="ตั้งค่า">⚙️</button>
+      </div>
+    </header>
+    <main id="cards" aria-live="polite"></main>
+    <section class="card tips">
+      <details style="margin: 0">
+        <summary>เคล็ดลับและความปลอดภัย</summary>
+        <ul>
+          <li>
+            <b>รั้วกั้นบันได</b> เจาะยึดสกรู สูง 1 เมตร ล็อกถาวรในเวลางาน
+            จนลูกอายุ 5–6 ขวบ
+          </li>
+          <li>
+            <b>คอกกั้น 180 x 180 ซม.</b> ตั้งนอกห้องนอน ปูเบาะหนา
+            ใส่ตู้ลิ้นชักพลาสติกเบาเป็น “ตู้หลอก” ใส่ของเล่น
+          </li>
+          <li>
+            <b>โซนทำงาน</b> พอพ้นวัยแบเบาะ ย้ายโต๊ะเข้าห้องนอนปิดประตู
+            ลูกจะไม่เห็นจอ
+          </li>
+          <li><b>Mute ไมค์</b> เปิดเฉพาะตอนพูดคุยงาน</li>
+          <li>
+            <b>หูฟังตัดเสียงรบกวน</b> ใช้ซอฟต์แวร์ตัดเสียงด้วย AI เช่น Krisp
+          </li>
+          <li>
+            <b>ข้อความด่วน</b> ตั้งข้อความสำเร็จรูป “รับทราบครับ
+            กำลังตรวจสอบข้อมูลส่วนนี้ให้ สักครู่รีบส่งกลับไปนะครับ” ซื้อเวลา 10
+            นาที
+          </li>
+        </ul>
+      </details>
+    </section>
+
+    <button id="fab" aria-label="บันทึกของลูก">➕</button>
+
+    <div
+      class="ov sheet"
+      id="sh"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="shT"
+    >
+      <div class="shc">
+        <div class="shh">
+          <b id="shT">บันทึกของลูก</b
+          ><button id="shx" aria-label="ปิด">✕</button>
+        </div>
+        <div class="chips" id="pk"></div>
+        <button class="btn alt" id="slp"></button>
+        <div class="tp" id="tp" style="margin-top: 10px"></div>
+        <div class="qk" id="qk"></div>
+        <input id="lv" type="text" aria-label="รายละเอียด" />
+        <input id="lt" type="datetime-local" aria-label="เวลา" />
+        <button class="btn" id="lgo">บันทึก</button>
+        <div class="sum" id="sum"></div>
+        <div id="ents"></div>
+      </div>
+    </div>
+
+    <div
+      class="ov"
+      id="gsw"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="gsT"
+    >
+      <div class="wc">
+        <h2 id="gsT" style="margin: 4px 0">เชื่อม Google Sheet</h2>
+        <p>
+          วางลิงก์ Web App จาก Apps Script ใส่ครั้งเดียว
+          ทุกบันทึกจะถูกส่งเข้าชีตให้อัตโนมัติ
+        </p>
+        <input
+          id="gsu"
+          type="url"
+          placeholder="https://script.google.com/macros/s/.../exec"
+          aria-label="ลิงก์ Web App"
+        />
+        <div class="err" id="gsE" role="alert"></div>
+        <button class="btn" id="gsOk">บันทึกลิงก์</button
+        ><button class="btn off" id="gsSk">ข้ามไปก่อน</button>
+      </div>
+    </div>
+
+    <div
+      class="ov"
+      id="wel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="welT"
+    >
+      <div class="wc">
+        <h2 id="welT" style="margin: 4px 0">ลูกชื่ออะไร เกิดวันไหนเอ่ย?</h2>
+        <p>
+          ใส่ครั้งเดียว เดี๋ยวเลือกตารางตามวัยให้เอง เพิ่มลูกอีกคนได้ภายหลัง
+        </p>
+        <input
+          type="text"
+          id="nm"
+          placeholder="ชื่อ / ชื่อเล่นลูก"
+          maxlength="20"
+          aria-label="ชื่อลูก"
+        />
+        <label for="bd" style="position: absolute; left: -9999px"
+          >วันเกิดลูก</label
+        ><input type="date" id="bd" />
+        <div class="err" id="welE" role="alert"></div>
+        <button class="btn" id="bdGo">บันทึก 🎈</button
+        ><button class="btn off" id="bdX">ยกเลิก</button
+        ><button class="btn off" id="bdDel">ลบเด็กคนนี้</button>
+      </div>
+    </div>
+
+    <div
+      class="ov"
+      id="set"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="setT"
+    >
+      <div class="wc">
+        <h2 id="setT" style="margin: 0 0 6px">ตั้งค่า</h2>
+        <div id="setL"></div>
+      </div>
+    </div>
+
+    <script>
+      const S = [
+        {
+          n: "แรกเกิด–4 เดือน",
+          e: "🐣",
+          r: [
+            "07:00|🍼|ตื่น กินนม เปลี่ยนผ้าอ้อม|ตื่นนอน เตรียมนมและของใช้ข้างโต๊ะ",
+            "08:00|😴|งีบรอบเช้า|พักหรือทำงานเบาๆ ใกล้ลูก",
+            "10:00|🍼|กินนม + เรอ + เปลี่ยนผ้าอ้อม|ป้อนนม เปลี่ยนผ้าอ้อม",
+            "10:30|🌤️|ตื่นเล่น มองหน้า ฟังเสียงพ่อ/แม่พูดคุย|คุยกับลูกสั้นๆ ทำงานเบาๆ ถ้าลูกสงบ",
+            "11:00|😴|งีบรอบสาย|[งาน] ลูกหลับ ลุยงานที่ต้องใช้สมาธิ",
+            "13:00|🍼|กินนม + เรอ + เปลี่ยนผ้าอ้อม|[พักเที่ยง] กินข้าว อุ้มลูก",
+            "14:00|😴|งีบรอบบ่าย|[งาน] ทำงาน แต่สแตนด์บายพร้อมวางงานทุกเมื่อ",
+            "16:00|🍼|กินนม + เรอ + เปลี่ยนผ้าอ้อม|ป้อนนม เปลี่ยนผ้าอ้อม",
+            "16:30|😴|งีบรอบเย็น (หลับๆ ตื่นๆ)|เก็บงานให้ทันก่อนเย็น",
+            "18:00|🛁|กินนม + อาบน้ำ กล่อมนอน|[เลิกงาน] ปิดคอม ดูแลลูกเต็มตัว",
+            "21:00|🌙|กินนมก่อนนอน (ตื่นกินนมกลางคืนเป็นเรื่องปกติ)|สลับกันตื่น หรือพักเอาแรง",
+          ],
+        },
+        {
+          n: "4–6 เดือน",
+          e: "👶",
+          r: [
+            "07:00|🍼|ตื่นนอน + กินนมมื้อที่ 1|ตื่นนอน เคลียร์ตัวเอง",
+            "07:30|🧸|เล่นคว่ำหงาย ชวนคุย อุ้มให้เต็มที่ (ชาร์จความรัก)|เตรียมนมใส่ตู้เย็น จัดสถานีแพมเพิสข้างโต๊ะ",
+            "08:30|😴|นอนกลางวันรอบแรก (Nap 1)|เช็กอีเมลส่วนตัว พักผ่อน",
+            "09:30|🍼|อุ้มตื่น + นมมื้อที่ 2 + เปลี่ยนแพมเพิส|เตรียมความพร้อมก่อนเข้าระบบงาน",
+            "10:00|😴|เข้านอนกลางวันรอบสอง (Nap 2) ในคอก|[เริ่มงาน] นั่งหน้าคอมนอกห้องนอน เงียบสนิท",
+            "11:00|🧸|ลูกมักตื่น ให้ของเล่นผ้า ยางกัด ในคอก|[พัก 15 นาที] เช็กแพมเพิส สลับของเล่นในคอก",
+            "11:15|🛏️|พลิกคว่ำพลิกหงายคนเดียวในคอก|ทำงานต่อ (หูฟังตัดเสียงสแตนด์บาย)",
+            "12:00|🍼|[พักเที่ยง] นมมื้อที่ 3 + อุ้มเดินเล่นเรอ เปลี่ยนผ้าอ้อม|[พักเที่ยง] กินข้าว ให้เวลาลูกเต็มที่ 1 ชั่วโมง",
+            "13:00|😴|หย่อนเข้าคอก เตรียมพานอน|[เริ่มงานบ่าย] กลับเข้าหน้าคอม",
+            "13:30|😴|นอนกลางวันรอบบ่ายยาว (Nap 3) ในคอก|[นาทีทอง] งานเอกสาร/ประชุมสำคัญที่ต้องใช้เสียง",
+            "15:30|🍼|ตื่น + นมมื้อที่ 4 + เปลี่ยนแพมเพิส|[พัก 15 นาที] ป้อนนมด่วน เปลี่ยนแพมเพิสไว",
+            "15:45|🎠|ดูโมบาย เล่นตุ๊กตาผ้าในคอกคนเดียว|นั่งทำงานหน้าจอ",
+            "16:45|🔔|เล่นของเล่นกรุ๊งกริ๊งชิ้นเบาๆ ในคอก|[พัก 15 นาที] สลับชุดของเล่นผ้าชุดใหม่",
+            "17:00|😴|นอนสลึมสลือ (อาจงีบสั้นๆ ~30 นาที)|เก็บตกงานสุดท้าย ตอบแชต เคลียร์งานก่อนปิดวัน",
+            "18:00|🛁|นมมื้อที่ 5 + อาบน้ำเย็น + นอนยาวตอน 2 ทุ่ม|[เลิกงาน] ปิดคอม สวมบทบาทพ่อ/แม่เต็มตัว",
+          ],
+        },
+        {
+          n: "6–12 เดือน",
+          e: "🥣",
+          r: [
+            "07:00|🍼|ตื่นนอน เช็ดหน้าเช็ดตา เปลี่ยนแพมเพิส|ตื่นนอน จัดสถานีเสบียง",
+            "08:00|🥣|ข้าวบดมื้อที่ 1 (มื้อเช้า) + นมนิดหน่อย|ทานมื้อเช้าไปพร้อมกับลูก",
+            "08:30|🧱|ชวนคลาน นั่งเล่นบล็อกตัวต่อ ชาร์จพลัง|พาเล่นเต็มที่ให้ลูกเหนื่อยกาย",
+            "09:30|😴|เข้านอนกลางวันรอบเช้า (Nap 1)|สแตนด์บาย Mute ไมค์โปรแกรมประชุม",
+            "10:00|😴|หลับสนิทในคอก (ตรงเวลางานพอดี)|[เริ่มงาน] ลุยงานที่ต้องใช้สมาธิสูง",
+            "11:30|🍼|ตื่นมางงๆ กินนมมื้อที่ 2 (เตรียมขวดไว้แล้ว)|[พัก 15 นาที] ป้อนนมด่วน เปลี่ยนแพมเพิส",
+            "11:45|🧸|นั่งรื้อของเล่นเบาๆ ในคอก|ทำงานสั้นๆ ตอบแชต",
+            "12:00|🥰|[พักเที่ยง] อุ้มออกจากคอก เปลี่ยนผ้าอ้อม ชวนคุยเล่น|[พักเที่ยง] กินข้าว และให้ความรักเต็มอิ่ม 1 ชั่วโมง",
+            "13:00|😴|เข้าคอก เตรียมกล่อมหลับรอบบ่าย|[เริ่มงานบ่าย] สแตนด์บายหน้าคอม",
+            "13:30|😴|นอนกลางวันรอบบ่าย (Nap 2) ในคอก|[นาทีทองบ่าย] เคลียร์งานชิ้นใหญ่หรือประชุม",
+            "15:30|🍼|ตื่น + นมมื้อที่ 3 + เปลี่ยนแพมเพิส|[พัก 15 นาที] จัดการนมและผ้าอ้อมให้เสร็จใน 10 นาที",
+            '15:45|🗄️|ปล่อยรื้อ "ตู้หลอกใส่ของเล่นเบาหวิว" ในคอก|นั่งทำงานหน้าคอม',
+            "16:45|🧦|ค้นถุงเท้าม้วน บล็อกโฟมในคอกต่อ|[พัก 15 นาที] สลับของเล่นในตู้หลอก ย้ายชั้นลิ้นชัก",
+            "17:00|🧸|อ้อแอ้ เล่นของเล่นชุดใหม่ในคอกรอพ่อ/แม่|เคลียร์งานเย็น ตอบอีเมลสรุปวัน",
+            "18:00|🛁|นมมื้อที่ 4 + ข้าวบดมื้อเย็น (ถ้า 10 เดือนขึ้นไป)|[เลิกงาน] อาบน้ำ พาลูกเล่น ชดเชยเวลาที่หายไป",
+          ],
+        },
+        {
+          n: "1–2 ขวบ",
+          e: "🏃",
+          r: [
+            "07:00|🍚|ตื่นนอน + ข้าวเช้ามื้อที่ 1 + นม 1 กล่อง|ทานข้าวเช้าพร้อมลูก เตรียมอาหารกลางวันใส่กล่อง",
+            "08:00|🌳|เดินเล่นนอกบ้าน ต่อบล็อก ปล่อยพลังให้สุด|ชวนวิ่ง ชวนเหนื่อย ให้ลูกพร้อมนอนยาวตอนบ่าย",
+            "09:45|🧺|เข้าคอก 180x180 พร้อมเซ็ตตู้หลอก|[เตรียมตัว] ย้ายตัวเองและคอมเข้าห้องนอนปิดประตู",
+            "10:00|🧩|ง่วนรื้อของเล่นในคอก|[เริ่มงาน] ทำงานในห้องนอนเงียบๆ ใส่หูฟัง",
+            "11:00|🍎|เริ่มเบื่อ นั่งกินขนมทานเล่น (Finger Food)|[พัก 15 นาที] ออกมาเติมน้ำ ยื่นสแน็คผลไม้ให้ลูก",
+            "11:15|🧱|เล่นบล็อกโฟม ยางบีบ ในคอก|ทำงานในห้องนอนต่อ",
+            "12:00|🍚|[พักเที่ยง] ข้าวเที่ยงมื้อที่ 2 + เปลี่ยนแพมเพิส|[พักเที่ยง] ออกมากินข้าวประกบลูก 1 ชั่วโมง",
+            "13:00|🤱|อุ้มเข้าห้องนอน นอนบนเตียงข้างพ่อ/แม่|เคลียร์งานเบาๆ ระหว่างกล่อมลูกนอน",
+            "13:30|😴|นอนกลางวันยาวรอบบ่ายบนเตียง|[นาทีทองสุดๆ] ลุยงานด่วนในห้องแอร์เงียบสนิท",
+            "15:30|🥛|ตื่น พ่อ/แม่อุ้มกลับไปคอกด้านนอก กินนมกล่อง|[พัก 15 นาที] เปลี่ยนผ้าอ้อม ป้อนนมกล่อง",
+            "15:45|🗄️|ช่วงพีค: รื้อตู้หลอกด่านใหม่ (พ่อ/แม่แอบสลับของไว้)|กลับเข้าห้องนอน พิมพ์เอกสาร/ประชุม",
+            "16:45|🧸|เล่นของเล่นพลาสติกชิ้นเบาๆ ในคอก|[พัก 15 นาที] โกยของเล่นเข้าตู้หลอก สลับชั้น",
+            "17:00|📚|ต่อเลโก้ชิ้นยักษ์ หรือดูนิทานภาพในคอก|เคลียร์งานท้ายวัน ตรวจความเรียบร้อยก่อนปิดระบบ",
+            "18:00|🍚|ข้าวเย็นมื้อที่ 3 + นมก่อนนอน|[เลิกงาน] พาลูกฝึกเดินขึ้น-ลงบันไดปูนชั้น 2",
+          ],
+        },
+        {
+          n: "2–3 ขวบ+",
+          e: "🧒",
+          r: [
+            "07:00|🍚|ตื่นนอน + ข้าวเช้ามื้อที่ 1 + อาบน้ำแต่งตัว|ทานข้าวพร้อมลูก Meal Prep อาหารกลางวันและของว่าง",
+            '08:30|💃|"บรีฟงานกับลูก" + วิ่งปล่อยพลัง เต้นตามเพลง|สอนกติกา: "ถ้าพ่อ/แม่เข้าห้องนอน แปลว่าทำงาน ห้ามเปิดนะ"',
+            "09:30|🧠|เข้าคอกใหญ่นอกห้องนอน เซ็ตกิจกรรมสมอง|เตรียมสมุดสติกเกอร์ หรือเลโก้ดูโปล้ผืนใหญ่",
+            "10:00|🎨|จดจ่อกับของเล่นชิ้นโปรด/ระบายสีในคอก|[เริ่มงาน] เข้าห้องนอนปิดประตู ล็อกรั้วบันไดชั้น 3 ให้แน่น",
+            "11:00|🥛|เปิดตู้หลอก (ตั้งกลางคอกกันปีน) รื้อของเล่นเบา|[พัก 15 นาที] ออกมาชมลูก ยื่นนมกล่อง + นมเปรี้ยว",
+            "11:15|🎭|เล่นบทบาทสมมติคนเดียวในคอก|กลับเข้าห้องนอนลุยงานต่อ",
+            "12:00|🍚|[พักเที่ยง] ข้าวเที่ยงมื้อที่ 2 + คุยสรุปช่วงเช้า|[พักเที่ยง] ทานข้าว ชื่นชมที่ลูกเป็นเด็กดี",
+            "13:00|📖|อ่านนิทานเงียบๆ บนเตียงในห้องนอน|เตรียมตัวสแตนด์บายทำงานช่วงบ่าย",
+            "13:30|🌙|Quiet Time: นอนหลับหรือนอนเล่นเงียบๆ บนเตียง|นั่งทำงานข้างเตียง (ลูกไม่กวนเพราะเป็นเวลากติกา)",
+            "15:30|🍪|กลับออกไปคอกกั้นขนาดยักษ์ด้านนอก|[พัก 15 นาที] ขนมว่างรอบบ่าย/เปลี่ยนแพมเพิส",
+            "15:45|🖍️|เล่นสติกเกอร์ แป้งโดว์ หรือของเล่นเบาๆ ในคอก|เข้าห้องนอนเคลียร์งานช่วงบ่าย",
+            "16:45|🗄️|รื้อค้นของเล่นในตู้หลอกกลางคอกรอบเย็น|[พัก 15 นาที] ออกมาสลับของเล่น ให้กำลังใจ",
+            "17:00|🧱|ต่อบล็อกพลาสติก รอกล่าวสวัสดีพ่อ/แม่|เคลียร์แชต สรุปงานประจำวัน",
+            "18:00|🍚|ข้าวเย็นมื้อที่ 3|[เลิกงาน] พาลูกเล่นนอกคอก ฝึกเดินปล่อยมือที่บันไดชั้น 2",
+          ],
+        },
+      ];
+      const $ = (id) => document.getElementById(id);
+      const g = (k) => {
+        try {
+          return localStorage.getItem(k);
+        } catch (e) {
+          return null;
+        }
+      };
+      const p = (k, v) => {
+        try {
+          localStorage.setItem(
+            k,
+            typeof v === "string" ? v : JSON.stringify(v),
+          );
+        } catch (e) {}
+      };
+      const J = (k, d) => {
+        try {
+          return JSON.parse(g(k)) || d;
+        } catch (e) {
+          return d;
+        }
+      };
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      let kids = J("kids", []),
+        lg = J("lg", []),
+        ssm = J("ssm", {}),
+        url = g("gs") || "",
+        skip = g("gsk") === "1",
+        kc = g("kc") || "",
+        bell = g("bell") !== "0",
+        lk = "milk",
+        q = [],
+        fl = false,
+        ed = null,
+        fired = {},
+        ac;
+      if (!kids.length && g("bd")) kids = [{ id: "k1", n: "ลูก", b: g("bd") }];
+      if (!kids.find((k) => k.id === kc)) kc = kids[0] ? kids[0].id : "";
+      lg.forEach((x) => {
+        if (!x.c) x.c = kc;
+      });
+      const sv = () => {
+        p("kids", kids);
+        p("lg", lg);
+        p("ssm", ssm);
+        p("kc", kc);
+      };
+      if (kids.length) sv();
+      q = url ? lg.filter((x) => !x.sent) : [];
+      const kid = (id) => kids.find((k) => k.id === id) || {},
+        kn = () => kid(kc).n || "ลูก";
+      const show = (id, s) => {
+        $(id).style.display = s ? "flex" : "none";
+      };
+      const TY = {
+        milk: [
+          "🍼",
+          "กินนม",
+          'ปริมาณ ml เช่น 90 (เข้าเต้าพิมพ์ "เต้า 15 นาที")',
+        ],
+        meal: ["🥣", "กินอาหาร", "กินอะไร มากน้อยแค่ไหน"],
+        sleep: ["😴", "นอน", "นอนนานกี่นาที เช่น 90"],
+        pee: ["💧", "ฉี่", "หมายเหตุ (ไม่ใส่ก็ได้)"],
+        poop: ["💩", "อึ", "ลักษณะ / สี (ไม่ใส่ก็ได้)"],
+        bath: ["🛁", "อาบน้ำ", "หมายเหตุ (ไม่ใส่ก็ได้)"],
+        med: ["💊", "ยา/วิตามิน", "ชื่อยา / ขนาดที่ให้"],
+        temp: ["🌡️", "วัดไข้", "อุณหภูมิ °C เช่น 37.2"],
+        wt: ["⚖️", "ชั่งตัว", "น้ำหนัก / ส่วนสูง เช่น 5.2 kg"],
+        note: ["📝", "โน้ต", "เช่น งอแง ผื่น ไอ ฟันขึ้น"],
+      };
+      const QK = {
+        milk: ["60", "90", "120", "150", "180"],
+        meal: ["กินน้อย", "กินครึ่ง", "กินหมด", "ไม่ยอมกิน"],
+        sleep: ["30", "60", "90", "120"],
+        poop: ["เหลว", "นิ่ม", "ปกติ", "แข็ง"],
+        med: ["วิตามินดี", "ยาลดไข้"],
+        temp: ["36.5", "37.0", "37.5", "38.0"],
+      };
+      const mins = (t) => {
+        const [a, b] = t.split(":");
+        return +a * 60 + +b;
+      };
+      const rows = (i) =>
+        S[i].r.map((x) => {
+          const a = x.split("|");
+          return { s: mins(a[0]), t: a[0], e: a[1], k: a[2], d: a[3] };
+        });
+      const fmt = (m) =>
+        m >= 60
+          ? Math.floor(m / 60) + " ชม. " + (m % 60 ? (m % 60) + " นาที" : "")
+          : m + " นาที";
+      const cur = (R, m) => {
+        let i = R.length - 1;
+        for (let j = 0; j < R.length; j++) if (m >= R[j].s) i = j;
+        if (m < R[0].s) i = R.length - 1;
+        return i;
+      };
+      const ageOf = (b) => {
+        const x = new Date(b + "T00:00:00"),
+          n = new Date();
+        let m =
+            (n.getFullYear() - x.getFullYear()) * 12 +
+            n.getMonth() -
+            x.getMonth(),
+          d = n.getDate() - x.getDate();
+        if (d < 0) {
+          m--;
+          d += new Date(n.getFullYear(), n.getMonth(), 0).getDate();
+        }
+        return isNaN(m) || m < 0 ? null : { m, d };
+      };
+      const stOf = (m) => (m < 4 ? 0 : m < 6 ? 1 : m < 12 ? 2 : m < 24 ? 3 : 4);
+      const ageT = (a) => {
+        const y = Math.floor(a.m / 12);
+        return (y ? y + " ปี " : "") + (a.m % 12) + " เดือน " + a.d + " วัน";
+      };
+      const nowL = () =>
+        new Date(Date.now() - new Date().getTimezoneOffset() * 6e4)
+          .toISOString()
+          .slice(0, 16);
+      const hm = (ms) => new Date(+ms).toTimeString().slice(0, 5);
+      function toast(t, ms = 2500) {
+        const T = $("toast");
+        T.textContent = t;
+        T.classList.add("show");
+        clearTimeout(T._t);
+        T._t = setTimeout(() => T.classList.remove("show"), ms);
+      }
+      function beep() {
+        try {
+          ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+          [660, 880, 1100].forEach((f, i) => {
+            const o = ac.createOscillator(),
+              gn = ac.createGain();
+            o.frequency.value = f;
+            o.connect(gn);
+            gn.connect(ac.destination);
+            const t = ac.currentTime + i * 0.18;
+            gn.gain.setValueAtTime(0.15, t);
+            gn.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+            o.start(t);
+            o.stop(t + 0.17);
+          });
+        } catch (e) {}
+        try {
+          navigator.vibrate && navigator.vibrate([200, 100, 200]);
+        } catch (e) {}
+      }
+      function snap(m) {
+        return kids
+          .map((k) => {
+            const a = ageOf(k.b);
+            if (!a) return null;
+            const si = stOf(a.m),
+              R = rows(si),
+              i = cur(R, m),
+              r = R[i],
+              nx = R[(i + 1) % R.length];
+            let end = nx.s,
+              mm = m;
+            if (end <= r.s) end += 1440;
+            if (mm < r.s) mm += 1440;
+            return {
+              k,
+              a,
+              si,
+              R,
+              i,
+              r,
+              nx,
+              pct: Math.min(100, ((mm - r.s) / (end - r.s)) * 100),
+              left: end - mm,
+            };
+          })
+          .filter(Boolean);
+      }
+      function cards(m) {
+        const A = snap(m);
+        if (!A.length)
+          return `<section class='card'>ยังไม่มีข้อมูลลูก กดปุ่ม + เพื่อเริ่มเลย</section>`;
+        const G = {},
+          multi = A.length > 1;
+        A.forEach((x) => {
+          (G[x.r.d] = G[x.r.d] || { r: x.r, nx: x.nx, n: [] }).n.push(x.k.n);
+        });
+        return `<section class='card par'><div class='lb'>พ่อ/แม่ ตอนนี้</div><ul>${Object.values(
+          G,
+        )
+          .map(
+            (o) =>
+              `<li><div class='tx'>${o.r.d}</div><small>${o.r.t}–${o.nx.t} น.${multi ? " (ตามช่วงของ " + o.n.map(esc).join(", ") + ")" : ""}</small></li>`,
+          )
+          .join("")}</ul></section>
+<section class='card'><div class='lb'>ลูกๆ ตอนนี้</div>${A.map((x) => `<div class='kr'><div class='ic'>${x.r.e}</div><div class='kb'><div class='kt'><b>${esc(x.k.n)}</b><small>${ageT(x.a)}</small>${ssm[x.k.id] ? `<span class='zz'>หลับตั้งแต่ ${hm(ssm[x.k.id])}</span>` : ""}</div><div>${x.r.k}</div><div class='bar'><i style='width:${x.pct}%'></i></div><small>อีก ${fmt(x.left)} ต่อไป ${x.nx.t} น. ${x.nx.e} ${x.nx.k}</small></div></div>`).join("")}</section>
+<section class='card'><div class='lb'>ตารางทั้งวัน</div>${A.map((x) => `<details><summary>${esc(x.k.n)} (${S[x.si].n})</summary><ul class='list'>${x.R.map((y, j) => `<li class='row ${j == x.i ? "cur" : j < x.i && m >= x.R[0].s ? "done" : ""}'><span class='t'>${y.t}</span><span>${y.e} ${y.k}<br><small>พ่อ/แม่: ${y.d}</small></span></li>`).join("")}</ul></details>`).join("")}</section>`;
+      }
+      function render(fire) {
+        const n = new Date(),
+          m = n.getHours() * 60 + n.getMinutes();
+        $("clk").textContent =
+          String(n.getHours()).padStart(2, "0") +
+          ":" +
+          String(n.getMinutes()).padStart(2, "0");
+        const op = [...document.querySelectorAll("#cards details")].map(
+          (d) => d.open,
+        );
+        $("cards").innerHTML = cards(m);
+        document.querySelectorAll("#cards details").forEach((d, i) => {
+          d.open = !!op[i];
+        });
+        if (!fire || !bell) return;
+        const ms = [],
+          ps = new Set();
+        snap(m).forEach((x) => {
+          const key = x.k.id + x.r.t + n.toDateString();
+          if (m === x.r.s && !fired[key]) {
+            fired[key] = 1;
+            ms.push(x.k.n + " " + x.r.t + " น. " + x.r.e + " " + x.r.k);
+            ps.add(x.r.d);
+          }
+        });
+        if (!ms.length) return;
+        const body = ms.join("\n") + "\nพ่อ/แม่: " + [...ps].join(" / ");
+        toast(body, 9000);
+        beep();
+        try {
+          if ("Notification" in window && Notification.permission === "granted")
+            new Notification("ถึงเวลาแล้ว", { body });
+        } catch (e) {}
+      }
+      async function flush() {
+        if (!url || fl || !q.length) return;
+        fl = true;
+        let n = 0,
+          bad = false;
+        while (q.length) {
+          const d = q[0];
+          try {
+            await fetch(url, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain" },
+              body: JSON.stringify(d),
+            });
+          } catch (e) {
+            bad = true;
+            break;
+          }
+          d.sent = 1;
+          q.shift();
+          n++;
+          sv();
+        }
+        fl = false;
+        if (n) toast("ส่งเข้า Google Sheet แล้ว ✅");
+        else if (bad) toast("ส่งเข้าชีตไม่สำเร็จ จะลองใหม่ให้เอง");
+      }
+      function add(k, v, ms) {
+        const d = {
+          id: Date.now() + Math.random().toString(36).slice(2, 5),
+          t: new Date(ms).toISOString(),
+          k,
+          label: TY[k][1],
+          v,
+          c: kc,
+          name: kn(),
+        };
+        lg.push(d);
+        lg.sort((a, b) => (a.t < b.t ? -1 : 1));
+        if (url) q.push(d);
+        sv();
+        drawLg();
+        flush();
+      }
+      function drawLg() {
+        const td = new Date().toDateString(),
+          L = lg.filter((x) => x.c === kc),
+          T = L.filter((x) => new Date(x.t).toDateString() === td),
+          c = (k) => T.filter((x) => x.k === k),
+          ml = c("milk").reduce(
+            (a, x) => a + (/^\d+$/.test(x.v) ? +x.v : 0),
+            0,
+          ),
+          sl = c("sleep").reduce((a, x) => a + (parseInt(x.v) || 0), 0);
+        $("sum").innerHTML =
+          `<span>🍼 ${c("milk").length} ครั้ง${ml ? " รวม " + ml + " ml" : ""}</span><span>🥣 ${c("meal").length} มื้อ</span><span>😴 ${Math.floor(sl / 60)} ชม. ${sl % 60} น.</span><span>💧 ${c("pee").length}</span><span>💩 ${c("poop").length}</span>`;
+        $("ents").innerHTML =
+          L.slice(-15)
+            .reverse()
+            .map((x) => {
+              const d = new Date(x.t),
+                dd =
+                  d.toDateString() === td
+                    ? ""
+                    : d.getDate() + "/" + (d.getMonth() + 1) + " ";
+              return `<div class='ent'><span>${TY[x.k][0]}</span><span>${dd}${d.toTimeString().slice(0, 5)} ${TY[x.k][1]} ${esc(x.v || "")}</span><button data-id='${x.id}' aria-label='ลบรายการ'>✕</button></div>`;
+            })
+            .join("") || "<small>ยังไม่มีบันทึกของคนนี้</small>";
+      }
+      function drawSl() {
+        $("slp").textContent = ssm[kc]
+          ? "☀️ " + kn() + " ตื่นแล้ว (หลับตั้งแต่ " + hm(ssm[kc]) + ")"
+          : "😴 " + kn() + " หลับแล้ว (เริ่มจับเวลา)";
+      }
+      function drawPK() {
+        $("shT").textContent = "บันทึกของ " + kn();
+        $("pk").style.display = kids.length > 1 ? "flex" : "none";
+        $("pk").innerHTML = kids
+          .map(
+            (k) =>
+              `<button class='chip' aria-pressed='${k.id === kc}' data-k='${k.id}'>${esc(k.n)}</button>`,
+          )
+          .join("");
+      }
+      function pickK(id) {
+        kc = id;
+        p("kc", kc);
+        drawPK();
+        drawSl();
+        drawLg();
+      }
+      function pickT(k) {
+        lk = k;
+        [...$("tp").children].forEach((b) =>
+          b.setAttribute("aria-pressed", b.dataset.k === k),
+        );
+        $("lv").placeholder = TY[k][2];
+        $("lt").value = nowL();
+        $("qk").innerHTML = (QK[k] || [])
+          .map((x) => `<button data-v='${x}'>${x}</button>`)
+          .join("");
+      }
+      function openLog() {
+        if (!kids.length) {
+          openKid(null);
+          return;
+        }
+        pickK(kc);
+        pickT(lk);
+        show("sh", 1);
+      }
+      $("tp").innerHTML = Object.keys(TY)
+        .map(
+          (k) => `<button data-k='${k}'><b>${TY[k][0]}</b>${TY[k][1]}</button>`,
+        )
+        .join("");
+      $("fab").onclick = openLog;
+      $("shx").onclick = () => show("sh", 0);
+      $("pk").onclick = (e) => {
+        const b = e.target.closest("button");
+        if (b) pickK(b.dataset.k);
+      };
+      $("tp").onclick = (e) => {
+        const b = e.target.closest("button");
+        if (b) {
+          pickT(b.dataset.k);
+          $("lv").value = "";
+        }
+      };
+      $("qk").onclick = (e) => {
+        const b = e.target.closest("button");
+        if (b) $("lv").value = b.dataset.v;
+      };
+      $("lgo").onclick = () => {
+        add(
+          lk,
+          $("lv").value.trim(),
+          new Date($("lt").value).getTime() || Date.now(),
+        );
+        $("lv").value = "";
+        show("sh", 0);
+        toast(
+          "บันทึกของ " + kn() + " แล้ว ✅" + (url ? " กำลังส่งเข้าชีต" : ""),
+        );
+        render(false);
+      };
+      $("slp").onclick = () => {
+        if (!ssm[kc]) {
+          ssm[kc] = Date.now() + "";
+        } else {
+          add(
+            "sleep",
+            Math.max(1, Math.round((Date.now() - ssm[kc]) / 6e4)) + " นาที",
+            +ssm[kc],
+          );
+          delete ssm[kc];
+        }
+        sv();
+        show("sh", 0);
+        render(false);
+        toast(kn() + (ssm[kc] ? " เริ่มหลับแล้ว 😴" : " ตื่นแล้ว ☀️"));
+      };
+      $("ents").onclick = (e) => {
+        const b = e.target.closest("button");
+        if (!b) return;
+        lg = lg.filter((x) => x.id !== b.dataset.id);
+        q = q.filter((x) => x.id !== b.dataset.id);
+        sv();
+        drawLg();
+      };
+      function openKid(id) {
+        ed = id;
+        const k = kid(id);
+        show("set", 0);
+        $("nm").value = k.n || "";
+        $("bd").value = k.b || "";
+        $("bd").max = nowL().slice(0, 10);
+        $("welE").textContent = "";
+        $("welT").textContent = k.id
+          ? "แก้ไขข้อมูลลูก"
+          : kids.length
+            ? "เพิ่มลูกอีกคน"
+            : "ลูกชื่ออะไร เกิดวันไหนเอ่ย?";
+        $("bdX").style.display = kids.length ? "block" : "none";
+        $("bdDel").style.display = k.id && kids.length > 1 ? "block" : "none";
+        show("wel", 1);
+      }
+      $("bdX").onclick = () => show("wel", 0);
+      $("bdGo").onclick = () => {
+        const v = $("bd").value,
+          n = $("nm").value.trim() || "ลูก";
+        if (!v || !ageOf(v)) {
+          $("welE").textContent =
+            "ใส่วันเกิดให้ถูกต้องก่อนนะ (ต้องไม่ใช่วันในอนาคต)";
+          return;
+        }
+        const k = kid(ed);
+        if (k.id) {
+          k.n = n;
+          k.b = v;
+        } else {
+          const nk = { id: "k" + Date.now().toString(36), n, b: v };
+          kids.push(nk);
+          kc = nk.id;
+        }
+        sv();
+        show("wel", 0);
+        try {
+          if (
+            bell &&
+            "Notification" in window &&
+            Notification.permission === "default"
+          )
+            Notification.requestPermission();
+        } catch (e) {}
+        render(false);
+      };
+      $("bdDel").onclick = () => {
+        const k = kid(ed);
+        if (
+          !k.id ||
+          !confirm(
+            "ลบ " +
+              k.n +
+              " ออกจากเว็บ? บันทึกของคนนี้ในเครื่องจะหายไป (ข้อมูลใน Google Sheet ไม่ถูกลบ)",
+          )
+        )
+          return;
+        kids = kids.filter((x) => x.id !== ed);
+        lg = lg.filter((x) => x.c !== ed);
+        q = q.filter((x) => x.c !== ed);
+        delete ssm[ed];
+        if (kc === ed) kc = kids[0].id;
+        sv();
+        show("wel", 0);
+        render(false);
+      };
+      function openGs() {
+        $("gsu").value = url;
+        $("gsE").textContent = "";
+        $("gsSk").textContent = url ? "ปิด" : "ข้ามไปก่อน";
+        show("set", 0);
+        show("gsw", 1);
+      }
+      $("gsOk").onclick = () => {
+        const v = $("gsu").value.trim();
+        if (v && !/^https:\/\/script\.google\.com\//.test(v)) {
+          $("gsE").textContent =
+            "ลิงก์ต้องขึ้นต้นด้วย https://script.google.com/";
+          return;
+        }
+        url = v;
+        p("gs", url);
+        q = url ? lg.filter((x) => !x.sent) : [];
+        show("gsw", 0);
+        flush();
+        if (!kids.length) openKid(null);
+      };
+      $("gsSk").onclick = () => {
+        if (!url) {
+          skip = true;
+          p("gsk", "1");
+        }
+        show("gsw", 0);
+        if (!kids.length) openKid(null);
+      };
+      function drawSet() {
+        $("setL").innerHTML =
+          kids
+            .map(
+              (k) =>
+                `<button class='btn alt' data-e='${k.id}'>✏️ ${esc(k.n)}</button>`,
+            )
+            .join("") +
+          `<button class='btn alt' data-add='1'>➕ เพิ่มลูก</button><button class='btn alt' data-gs='1'>📊 Google Sheet: ${url ? "เชื่อมแล้ว" : "ยังไม่เชื่อม"}</button><button class='btn alt' data-bell='1'>${bell ? "🔔 แจ้งเตือน: เปิด" : "🔕 แจ้งเตือน: ปิด"}</button><button class='btn off' data-x='1'>ปิด</button>`;
+      }
+      $("setB").onclick = () => {
+        drawSet();
+        show("set", 1);
+      };
+      $("setL").onclick = (e) => {
+        const b = e.target.closest("button");
+        if (!b) return;
+        const d = b.dataset;
+        if (d.e) openKid(d.e);
+        else if (d.add) openKid(null);
+        else if (d.gs) openGs();
+        else if (d.bell) {
+          bell = !bell;
+          p("bell", bell ? "1" : "0");
+          try {
+            if (
+              bell &&
+              "Notification" in window &&
+              Notification.permission === "default"
+            )
+              Notification.requestPermission();
+          } catch (x) {}
+          drawSet();
+        } else show("set", 0);
+      };
+      ["sh", "set"].forEach((id) =>
+        $(id).addEventListener("click", (e) => {
+          if (e.target === $(id)) show(id, 0);
+        }),
+      );
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          show("sh", 0);
+          show("set", 0);
+        }
+      });
+      window.addEventListener("online", flush);
+      render(false);
+      if (!url && !skip) {
+        $("gsu").value = "";
+        show("gsw", 1);
+      } else if (!kids.length) openKid(null);
+      flush();
+      setInterval(() => {
+        render(true);
+        flush();
+      }, 15000);
+    </script>
+  </body>
+</html>
