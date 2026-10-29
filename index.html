@@ -1279,5 +1279,440 @@
         flush();
       }, 15000);
     </script>
+
+    <style>
+      .gt {
+        font-weight: 600;
+        margin: 16px 0 4px;
+        font-size: 0.95rem;
+      }
+      .gr svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .gr text {
+        font-family: inherit;
+      }
+    </style>
+    <div
+      class="ov sheet"
+      id="dash"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dashT"
+    >
+      <div class="shc">
+        <div class="shh">
+          <b id="dashT">📊 สรุป</b
+          ><button id="dashx" aria-label="ปิด">✕</button>
+        </div>
+        <div class="chips" id="dk"></div>
+        <div class="chips" id="dr"></div>
+        <div class="sum" id="dsum"></div>
+        <div class="gr" id="dch"></div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        let dk = null,
+          dn = 14,
+          shUrl = "";
+        const num = (v) => {
+          const m = String(v || "").match(/-?\d+(\.\d+)?/);
+          return m ? parseFloat(m[0]) : 0;
+        };
+        const dayKey = (d) => {
+          const x = new Date(d);
+          return x.getFullYear() + "-" + (x.getMonth() + 1) + "-" + x.getDate();
+        };
+        const post = (o) => {
+          if (url)
+            fetch(url, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain" },
+              body: JSON.stringify(o),
+            }).catch(() => {});
+        };
+
+        /* ---------- ดึงข้อมูลจากชีต แล้วรวมกับในเครื่อง ---------- */
+        async function pull() {
+          if (!url || fl) return 0;
+          try {
+            const r = await fetch(
+              url +
+                (url.includes("?") ? "&" : "?") +
+                "action=all&_=" +
+                Date.now(),
+            );
+            const R = await r.json();
+            if (!R || !R.kids) return -1;
+            shUrl = R.sheet || "";
+            const rk = R.kids.filter((k) => k.id && k.b),
+              ids = new Set(rk.map((k) => k.id));
+            const loc = kids.filter((k) => !ids.has(k.id));
+            if (loc.length) post({ op: "kids", kids: loc }); // เด็กที่มีแต่ในเครื่อง -> ส่งขึ้นชีต
+            kids = rk.concat(loc);
+            const rid = new Set(R.logs.map((x) => x.id)),
+              keep = lg.filter((x) => !x.sent && !rid.has(x.id));
+            lg = R.logs
+              .filter((x) => TY[x.k] && ids.has(x.c))
+              .map((x) => ({ ...x, label: TY[x.k][1], sent: 1 }))
+              .concat(keep);
+            lg.sort((a, b) => (a.t < b.t ? -1 : 1));
+            if (!kids.find((k) => k.id === kc)) kc = kids[0] ? kids[0].id : "";
+            q = lg.filter((x) => !x.sent);
+            sv();
+            render(false);
+            if (kids.length && $("sh").style.display === "flex") {
+              drawPK();
+              drawSl();
+              drawLg();
+            }
+            return kids.length;
+          } catch (e) {
+            return -1;
+          }
+        }
+        const sync = async () => {
+          const n = await pull();
+          if (n >= 0) flush();
+          return n;
+        };
+
+        /* ---------- ใส่ลิงก์ครั้งแรก: ดึงข้อมูลมาใช้เลย ---------- */
+        $("gsOk").onclick = async () => {
+          const v = $("gsu").value.trim();
+          if (v && !/^https:\/\/script\.google\.com\//.test(v)) {
+            $("gsE").textContent =
+              "ลิงก์ต้องขึ้นต้นด้วย https://script.google.com/";
+            return;
+          }
+          url = v;
+          p("gs", url);
+          show("gsw", 0);
+          q = [];
+          if (url) {
+            toast("กำลังดึงข้อมูลจากชีต…", 4000);
+            const n = await pull();
+            if (n > 0)
+              toast(
+                "ดึงข้อมูลแล้ว: " +
+                  kids.length +
+                  " คน, " +
+                  lg.length +
+                  " บันทึก ✅",
+              );
+            else if (n < 0)
+              toast(
+                "ติดต่อชีตไม่ได้ ตรวจว่า Deploy สคริปต์เวอร์ชันใหม่ และเลือก Anyone",
+              );
+            flush();
+          }
+          if (!kids.length) openKid(null);
+        };
+
+        /* ---------- ส่งการแก้ไข/ลบ ขึ้นชีต ---------- */
+        const go = $("bdGo").onclick;
+        $("bdGo").onclick = () => {
+          go();
+          if ($("wel").style.display !== "flex") post({ op: "kids", kids });
+        };
+        const del = $("bdDel").onclick;
+        $("bdDel").onclick = () => {
+          const id = ed,
+            n = kids.length;
+          del();
+          if (kids.length < n) post({ op: "delKid", id });
+        };
+        const en = $("ents").onclick;
+        $("ents").onclick = (e) => {
+          const b = e.target.closest("button"),
+            id = b && b.dataset.id;
+          en(e);
+          if (id) post({ op: "delLog", id });
+        };
+
+        /* ---------- เมนูตั้งค่า: ซิงค์ / เปิดชีต ---------- */
+        const ds = drawSet;
+        drawSet = function () {
+          ds();
+          if (!url) return;
+          $("setL")
+            .querySelector("[data-x]")
+            .insertAdjacentHTML(
+              "beforebegin",
+              '<button class="btn alt" data-sync="1">🔄 ซิงค์จากชีตตอนนี้</button>' +
+                (shUrl
+                  ? '<button class="btn alt" data-sheet="1">📄 เปิด Google Sheet</button>'
+                  : ""),
+            );
+        };
+        const so = $("setL").onclick;
+        $("setL").onclick = async (e) => {
+          const b = e.target.closest("button"),
+            d = b && b.dataset;
+          if (d && d.sync) {
+            const n = await sync();
+            toast(n >= 0 ? "ซิงค์แล้ว ✅" : "ติดต่อชีตไม่ได้");
+            drawSet();
+            return;
+          }
+          if (d && d.sheet) {
+            window.open(shUrl, "_blank", "noopener");
+            return;
+          }
+          so(e);
+        };
+
+        /* ---------- หน้าสรุป + กราฟ (SVG ล้วน) ---------- */
+        const mute = "fill:var(--mute)",
+          W = 320,
+          Ht = 130;
+        function bars(title, vals, labs, unit) {
+          const n = vals.length,
+            mx = Math.max(...vals, 1),
+            bw = (W - 8) / n,
+            ph = Ht - 32;
+          const step = n > 14 ? 5 : 1;
+          let s = "";
+          vals.forEach((v, i) => {
+            const h = (v / mx) * ph,
+              x = 4 + i * bw;
+            s +=
+              '<rect x="' +
+              (x + bw * 0.15).toFixed(1) +
+              '" y="' +
+              (Ht - 18 - h).toFixed(1) +
+              '" width="' +
+              (bw * 0.7).toFixed(1) +
+              '" height="' +
+              h.toFixed(1) +
+              '" rx="3" style="fill:var(--acc)"/>';
+            if (n <= 14 && v > 0)
+              s +=
+                '<text x="' +
+                (x + bw / 2).toFixed(1) +
+                '" y="' +
+                (Ht - 21 - h).toFixed(1) +
+                '" text-anchor="middle" font-size="9" style="' +
+                mute +
+                '">' +
+                Math.round(v * 10) / 10 +
+                "</text>";
+            if (i % step === 0 || i === n - 1)
+              s +=
+                '<text x="' +
+                (x + bw / 2).toFixed(1) +
+                '" y="' +
+                (Ht - 5) +
+                '" text-anchor="middle" font-size="9" style="' +
+                mute +
+                '">' +
+                labs[i] +
+                "</text>";
+          });
+          return (
+            '<div class="gt">' +
+            title +
+            " <small>(" +
+            unit +
+            ')</small></div><svg viewBox="0 0 ' +
+            W +
+            " " +
+            Ht +
+            '" role="img" aria-label="' +
+            title +
+            '">' +
+            s +
+            "</svg>"
+          );
+        }
+        function line(title, pts, unit) {
+          if (!pts.length)
+            return (
+              '<div class="gt">' + title + "</div><small>ยังไม่มีข้อมูล</small>"
+            );
+          pts = pts.slice(-20);
+          const ys = pts.map((p) => p.y),
+            lo = Math.min(...ys),
+            hi = Math.max(...ys),
+            sp = hi - lo || 1,
+            ph = Ht - 44;
+          const X = (i) =>
+              pts.length === 1 ? W / 2 : 20 + (i * (W - 40)) / (pts.length - 1),
+            Y = (y) => 24 + ph - ((y - lo) / sp) * ph;
+          let s =
+            '<polyline fill="none" style="stroke:var(--acc)" stroke-width="2.5" stroke-linejoin="round" points="' +
+            pts
+              .map((p, i) => X(i).toFixed(1) + "," + Y(p.y).toFixed(1))
+              .join(" ") +
+            '"/>';
+          pts.forEach((p, i) => {
+            s +=
+              '<circle cx="' +
+              X(i).toFixed(1) +
+              '" cy="' +
+              Y(p.y).toFixed(1) +
+              '" r="3.5" style="fill:var(--acc)"/>';
+            if (pts.length <= 8 || i === 0 || i === pts.length - 1)
+              s +=
+                '<text x="' +
+                X(i).toFixed(1) +
+                '" y="' +
+                (Y(p.y) - 8).toFixed(1) +
+                '" text-anchor="middle" font-size="9" style="' +
+                mute +
+                '">' +
+                p.y +
+                "</text>";
+          });
+          s +=
+            '<text x="20" y="' +
+            (Ht - 5) +
+            '" font-size="9" style="' +
+            mute +
+            '">' +
+            pts[0].d +
+            '</text><text x="' +
+            (W - 20) +
+            '" y="' +
+            (Ht - 5) +
+            '" text-anchor="end" font-size="9" style="' +
+            mute +
+            '">' +
+            pts[pts.length - 1].d +
+            "</text>";
+          return (
+            '<div class="gt">' +
+            title +
+            " <small>(" +
+            unit +
+            ')</small></div><svg viewBox="0 0 ' +
+            W +
+            " " +
+            Ht +
+            '" role="img" aria-label="' +
+            title +
+            '">' +
+            s +
+            "</svg>"
+          );
+        }
+        const dm = (d) => d.getDate() + "/" + (d.getMonth() + 1);
+        function drawDash() {
+          $("dashT").textContent = "📊 สรุปของ " + (kid(dk).n || "ลูก");
+          $("dk").style.display = kids.length > 1 ? "flex" : "none";
+          $("dk").innerHTML = kids
+            .map(
+              (k) =>
+                `<button class="chip" aria-pressed="${k.id === dk}" data-k="${k.id}">${esc(k.n)}</button>`,
+            )
+            .join("");
+          $("dr").innerHTML = [7, 14, 30]
+            .map(
+              (n) =>
+                `<button class="chip" aria-pressed="${n === dn}" data-n="${n}">${n} วัน</button>`,
+            )
+            .join("");
+          const L = lg.filter((x) => x.c === dk),
+            days = [];
+          for (let i = dn - 1; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            days.push(d);
+          }
+          const A = {};
+          days.forEach(
+            (d) => (A[dayKey(d)] = { ml: 0, meal: 0, sl: 0, out: 0 }),
+          );
+          L.forEach((x) => {
+            const a = A[dayKey(x.t)];
+            if (!a) return;
+            if (x.k === "milk" && /^\d+$/.test(x.v)) a.ml += +x.v;
+            else if (x.k === "meal") a.meal++;
+            else if (x.k === "sleep") a.sl += num(x.v);
+            else if (x.k === "pee" || x.k === "poop") a.out++;
+          });
+          const col = (f) => days.map((d) => f(A[dayKey(d)])),
+            labs = days.map((d) => d.getDate());
+          const ml = col((a) => a.ml),
+            sl = col((a) => Math.round(a.sl / 6) / 10),
+            ml2 = col((a) => a.meal),
+            out = col((a) => a.out);
+          const avg = (v) => {
+            const z = v.filter((x) => x > 0);
+            return z.length
+              ? Math.round((z.reduce((a, b) => a + b, 0) / z.length) * 10) / 10
+              : 0;
+          };
+          $("dsum").innerHTML =
+            `<span>🍼 เฉลี่ย ${avg(ml)} ml/วัน</span><span>😴 เฉลี่ย ${avg(sl)} ชม./วัน</span><span>🥣 เฉลี่ย ${avg(ml2)} มื้อ/วัน</span>`;
+          const gp = (k) =>
+            L.filter((x) => x.k === k && num(x.v)).map((x) => ({
+              y: num(x.v),
+              d: dm(new Date(x.t)),
+            }));
+          $("dch").innerHTML =
+            bars("🍼 นมต่อวัน", ml, labs, "ml") +
+            bars("😴 เวลานอนต่อวัน", sl, labs, "ชม.") +
+            bars("🥣 จำนวนมื้ออาหาร", ml2, labs, "มื้อ") +
+            bars("💧💩 ฉี่ + อึ", out, labs, "ครั้ง") +
+            line("⚖️ น้ำหนัก/ส่วนสูง", gp("wt"), "ตามที่บันทึก") +
+            line("🌡️ ไข้", gp("temp"), "°C");
+        }
+        function openDash() {
+          if (!kids.length) {
+            toast("ยังไม่มีข้อมูลลูก");
+            return;
+          }
+          if (!kids.find((k) => k.id === dk)) dk = kc;
+          drawDash();
+          show("dash", 1);
+        }
+        const db = document.createElement("button");
+        db.className = "ib";
+        db.textContent = "📊";
+        db.setAttribute("aria-label", "สรุปและกราฟ");
+        $("setB").before(db);
+        db.onclick = openDash;
+        $("dashx").onclick = () => show("dash", 0);
+        $("dash").addEventListener("click", (e) => {
+          if (e.target === $("dash")) show("dash", 0);
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") show("dash", 0);
+        });
+        $("dk").onclick = (e) => {
+          const b = e.target.closest("button");
+          if (b) {
+            dk = b.dataset.k;
+            drawDash();
+          }
+        };
+        $("dr").onclick = (e) => {
+          const b = e.target.closest("button");
+          if (b) {
+            dn = +b.dataset.n;
+            drawDash();
+          }
+        };
+
+        /* ---------- ซิงค์อัตโนมัติ (ให้หลายคนใช้พร้อมกันได้) ---------- */
+        const none = !kids.length;
+        if (url)
+          sync().then(() => {
+            if (none && kids.length && $("wel").style.display === "flex")
+              show("wel", 0);
+          });
+        setInterval(() => {
+          if (url) sync();
+        }, 60000);
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden && url) sync();
+        });
+      })();
+    </script>
   </body>
 </html>
