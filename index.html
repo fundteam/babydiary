@@ -1280,6 +1280,7 @@
       }, 15000);
     </script>
 
+    <!-- วางบล็อกนี้ทั้งก้อน "ก่อน </body>" ของไฟล์เดิม (ต่อท้าย <script> เดิม) ไม่ต้องแก้ส่วนอื่น -->
     <style>
       .gt {
         font-weight: 600;
@@ -1317,7 +1318,8 @@
       (function () {
         let dk = null,
           dn = 14,
-          shUrl = "";
+          shUrl = "",
+          lastPull = 0;
         const num = (v) => {
           const m = String(v || "").match(/-?\d+(\.\d+)?/);
           return m ? parseFloat(m[0]) : 0;
@@ -1337,7 +1339,7 @@
         };
 
         /* ---------- ดึงข้อมูลจากชีต แล้วรวมกับในเครื่อง ---------- */
-        async function pull() {
+        async function pull(replace) {
           if (!url || fl) return 0;
           try {
             const r = await fetch(
@@ -1351,16 +1353,27 @@
             shUrl = R.sheet || "";
             const rk = R.kids.filter((k) => k.id && k.b),
               ids = new Set(rk.map((k) => k.id));
-            const loc = kids.filter((k) => !ids.has(k.id));
-            if (loc.length) post({ op: "kids", kids: loc }); // เด็กที่มีแต่ในเครื่อง -> ส่งขึ้นชีต
-            kids = rk.concat(loc);
-            const rid = new Set(R.logs.map((x) => x.id)),
-              keep = lg.filter((x) => !x.sent && !rid.has(x.id));
-            lg = R.logs
-              .filter((x) => TY[x.k] && ids.has(x.c))
-              .map((x) => ({ ...x, label: TY[x.k][1], sent: 1 }))
-              .concat(keep);
+            const mk = (x) => ({ ...x, label: TY[x.k][1], sent: 1 }),
+              okLog = (x) => TY[x.k] && ids.has(x.c);
+            if (replace && (rk.length || R.logs.length)) {
+              // ใส่ชีตใหม่: ทิ้งข้อมูลเก่าบนเว็บ ใช้ของในชีตล้วนๆ (ถ้าดึงไม่สำเร็จ จะไม่ถึงบรรทัดนี้ ข้อมูลเดิมไม่หาย)
+              kids = rk;
+              lg = R.logs.filter(okLog).map(mk);
+              Object.keys(ssm).forEach((id) => {
+                if (!ids.has(id)) delete ssm[id];
+              });
+            } else {
+              // ชีตว่างเปล่า (หรือซิงค์ปกติ): รวมกับของในเครื่อง ส่วนที่มีแต่ในเครื่องจะถูกส่งขึ้นชีต
+              if (replace) lg.forEach((x) => (x.sent = 0));
+              const loc = kids.filter((k) => !ids.has(k.id));
+              if (loc.length) post({ op: "kids", kids: loc });
+              kids = rk.concat(loc);
+              const rid = new Set(R.logs.map((x) => x.id)),
+                keep = lg.filter((x) => !x.sent && !rid.has(x.id));
+              lg = R.logs.filter(okLog).map(mk).concat(keep);
+            }
             lg.sort((a, b) => (a.t < b.t ? -1 : 1));
+            lastPull = Date.now();
             if (!kids.find((k) => k.id === kc)) kc = kids[0] ? kids[0].id : "";
             q = lg.filter((x) => !x.sent);
             sv();
@@ -1375,8 +1388,8 @@
             return -1;
           }
         }
-        const sync = async () => {
-          const n = await pull();
+        const sync = async (replace) => {
+          const n = await pull(replace);
           if (n >= 0) flush();
           return n;
         };
@@ -1395,7 +1408,7 @@
           q = [];
           if (url) {
             toast("กำลังดึงข้อมูลจากชีต…", 4000);
-            const n = await pull();
+            const n = await pull(true);
             if (n > 0)
               toast(
                 "ดึงข้อมูลแล้ว: " +
@@ -1701,6 +1714,7 @@
 
         /* ---------- ซิงค์อัตโนมัติ (ให้หลายคนใช้พร้อมกันได้) ---------- */
         const none = !kids.length;
+        if (url) toast("กำลังซิงค์จากชีต…", 2000);
         if (url)
           sync().then(() => {
             if (none && kids.length && $("wel").style.display === "flex")
@@ -1708,9 +1722,10 @@
           });
         setInterval(() => {
           if (url) sync();
-        }, 60000);
+        }, 15 * 60000); // ทุก 15 นาทีถ้ายังเปิดหน้าจอค้าง
         document.addEventListener("visibilitychange", () => {
-          if (!document.hidden && url) sync();
+          if (!document.hidden && url && Date.now() - lastPull > 5 * 60000)
+            sync();
         });
       })();
     </script>
